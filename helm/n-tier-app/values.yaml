@@ -16,7 +16,7 @@ frontend:
 api:
   image:
     repository: ntier-api
-    tag: "1.0.0"
+    tag: "1.0.1"
     pullPolicy: IfNotPresent
   replicas: 2
   service:
@@ -28,7 +28,7 @@ api:
 worker:
   image:
     repository: ntier-worker
-    tag: "1.0.0"
+    tag: "1.0.1"
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
