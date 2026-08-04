@@ -1,0 +1,8 @@
+Task Board deployed. Components: frontend, api, worker, postgres, redis.
+
+View the app:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/frontend 8081:{{ .Values.frontend.service.port }}
+  open http://localhost:8081
+
+Watch the worker process the queue:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/component=worker -f

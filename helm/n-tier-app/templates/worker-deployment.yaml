@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    {{- include "n-tier-app.componentLabels" (dict "component" "worker" "Chart" .Chart "Release" .Release) | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        {{- include "n-tier-app.componentLabels" (dict "component" "worker" "Chart" .Chart "Release" .Release) | nindent 8 }}
+    spec:
+      containers:
+        - name: worker
+          image: "{{ .Values.imageRegistry }}/{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          env:
+            - name: PGHOST
+              value: postgres
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef: { name: postgres-credentials, key: POSTGRES_DB }
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef: { name: postgres-credentials, key: POSTGRES_USER }
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef: { name: postgres-credentials, key: POSTGRES_PASSWORD }
+            - name: REDIS_HOST
+              value: redis
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}

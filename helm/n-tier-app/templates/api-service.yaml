@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  labels:
+    {{- include "n-tier-app.componentLabels" (dict "component" "api" "Chart" .Chart "Release" .Release) | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/component: api
+  ports:
+    - port: {{ .Values.api.service.port }}
+      targetPort: 3000

@@ -1,0 +1,57 @@
+imageRegistry: 443071119316.dkr.ecr.us-west-2.amazonaws.com
+
+frontend:
+  image:
+    repository: ntier-frontend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 2
+  resources:
+    requests: { cpu: 50m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 128Mi }
+  service:
+    type: ClusterIP
+    port: 80
+
+api:
+  image:
+    repository: ntier-api
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 2
+  service:
+    port: 3000
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { cpu: 300m, memory: 256Mi }
+
+worker:
+  image:
+    repository: ntier-worker
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { cpu: 300m, memory: 256Mi }
+
+postgres:
+  image: postgres:16-alpine
+  storage: 1Gi
+  storageClassName: local-path
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 512Mi }
+  auth:
+    username: ntier
+    database: ntier
+    # Dev-only default so `helm install` works out of the box. In a real prod
+    # setup this would come from Sealed Secrets / External Secrets / Vault,
+    # never from a plaintext values.yaml.
+    password: ntier-dev-password
+
+redis:
+  image: redis:7-alpine
+  resources:
+    requests: { cpu: 50m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 128Mi }

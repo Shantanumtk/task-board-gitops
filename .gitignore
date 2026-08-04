@@ -1,0 +1,10 @@
+# Terraform secrets/state — never push these to GitHub
+terraform/*.pem
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/crash.log
+
+# OS
+.DS_Store

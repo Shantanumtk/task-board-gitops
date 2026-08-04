@@ -1,0 +1,11 @@
+{
+  "name": "ntier-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "redis": "^4.6.13"
+  }
+}

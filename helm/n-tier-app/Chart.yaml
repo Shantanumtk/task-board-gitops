@@ -1,0 +1,6 @@
+apiVersion: v2
+name: n-tier-app
+description: Task Board — a small n-tier/microservices demo (frontend, api, worker, postgres, redis) for ArgoCD practice
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
