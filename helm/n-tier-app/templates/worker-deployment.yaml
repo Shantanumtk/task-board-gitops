@@ -14,6 +14,8 @@ spec:
       labels:
         {{- include "n-tier-app.componentLabels" (dict "component" "worker" "Chart" .Chart "Release" .Release) | nindent 8 }}
     spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
       containers:
         - name: worker
           image: "{{ .Values.imageRegistry }}/{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
