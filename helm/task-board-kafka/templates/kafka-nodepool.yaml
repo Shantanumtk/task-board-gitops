@@ -1,0 +1,16 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: dual-role
+  labels:
+    strimzi.io/cluster: {{ .Values.kafkaClusterName }}
+    {{- include "task-board-kafka.componentLabels" (dict "component" "kafka" "Chart" .Chart "Release" .Release) | nindent 4 }}
+spec:
+  replicas: {{ .Values.kafka.replicas }}
+  roles:
+    - controller
+    - broker
+  storage:
+    type: {{ .Values.kafka.storage.type }}
+  resources:
+    {{- toYaml .Values.kafka.resources | nindent 4 }}

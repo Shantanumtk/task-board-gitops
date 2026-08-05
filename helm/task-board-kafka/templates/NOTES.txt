@@ -1,0 +1,11 @@
+Task Board (Kafka variant) deployed. Components: frontend, api, worker, postgres, Strimzi Kafka.
+
+View the app:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/frontend 8082:{{ .Values.frontend.service.port }}
+  open http://localhost:8082
+
+Watch the worker consume from Kafka:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/component=worker -f
+
+Inspect the Kafka cluster:
+  kubectl get kafka,kafkanodepool,kafkatopic -n {{ .Release.Namespace }}

@@ -1,0 +1,12 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: tasks
+  labels:
+    strimzi.io/cluster: {{ .Values.kafkaClusterName }}
+    {{- include "task-board-kafka.componentLabels" (dict "component" "kafka" "Chart" .Chart "Release" .Release) | nindent 4 }}
+spec:
+  partitions: {{ .Values.kafka.topic.partitions }}
+  replicas: {{ .Values.kafka.topic.replicationFactor }}
+  config:
+    retention.ms: "604800000"
