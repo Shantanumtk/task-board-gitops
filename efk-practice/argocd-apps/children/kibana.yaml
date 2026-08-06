@@ -15,7 +15,12 @@ spec:
     helm:
       values: |
         elasticsearchHosts: "http://elasticsearch-master:9200"
-        elasticsearchCertificateSecret: ""
+        # The chart's pre-install Job unconditionally mounts a secret named
+        # by this key, even though we don't use TLS. createCert:false on the
+        # elasticsearch app means the chart never creates this secret itself,
+        # so we pre-create an empty placeholder with this exact name (see
+        # deploy steps) rather than fight the chart's template.
+        elasticsearchCertificateSecret: "elasticsearch-master-certs"
         replicas: 1
         resources:
           requests:
