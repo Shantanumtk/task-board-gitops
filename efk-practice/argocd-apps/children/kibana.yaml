@@ -1,6 +1,10 @@
-# Official Elastic Kibana chart, pointed at the elasticsearch app's Service
-# (elasticsearch-master, the chart's default naming for release "elasticsearch")
-# over plain http since xpack security/TLS is disabled on that cluster.
+# Plain hand-written manifests instead of the official elastic/kibana chart.
+# That chart's pre-install hook Job unconditionally tries to create an
+# Elasticsearch service-account token over HTTPS (hardcoded), which only
+# makes sense when xpack security is enabled — it fails outright against our
+# security-disabled dev Elasticsearch. Kibana itself needs nothing more than
+# ELASTICSEARCH_HOSTS pointed at the cluster, so a plain Deployment avoids
+# that hook entirely.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -9,26 +13,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.elastic.co
-    chart: kibana
-    targetRevision: 8.5.1
-    helm:
-      values: |
-        elasticsearchHosts: "http://elasticsearch-master:9200"
-        # The chart's pre-install Job unconditionally mounts a secret named
-        # by this key, even though we don't use TLS. createCert:false on the
-        # elasticsearch app means the chart never creates this secret itself,
-        # so we pre-create an empty placeholder with this exact name (see
-        # deploy steps) rather than fight the chart's template.
-        elasticsearchCertificateSecret: "elasticsearch-master-certs"
-        replicas: 1
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+    repoURL: git@github.com:Shantanumtk/task-board-gitops.git
+    targetRevision: HEAD
+    path: efk-practice/manifests/kibana
+    directory:
+      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: logging
