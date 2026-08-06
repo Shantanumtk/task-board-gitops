@@ -1,0 +1,31 @@
+# Official Elastic Kibana chart, pointed at the elasticsearch app's Service
+# (elasticsearch-master, the chart's default naming for release "elasticsearch")
+# over plain http since xpack security/TLS is disabled on that cluster.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kibana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://helm.elastic.co
+    chart: kibana
+    targetRevision: 8.5.1
+    helm:
+      values: |
+        elasticsearchHosts: "http://elasticsearch-master:9200"
+        replicas: 1
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

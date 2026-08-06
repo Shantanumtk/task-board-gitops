@@ -1,0 +1,24 @@
+# app-of-apps root for the EFK (Elasticsearch, Fluentd, Kibana) logging stack.
+# Same pattern as app-of-apps/hello-env: this Application's source is a
+# directory of other Application manifests, not a chart. Syncing it creates
+# the 3 children below, each pulling a public upstream Helm chart directly
+# (no custom chart of ours involved) with dev-sized values.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: efk-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Shantanumtk/task-board-gitops.git
+    targetRevision: HEAD
+    path: efk-practice/argocd-apps/children
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

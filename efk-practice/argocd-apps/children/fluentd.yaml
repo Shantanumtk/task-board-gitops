@@ -1,0 +1,31 @@
+# Official Fluent community Helm chart. Runs as a DaemonSet tailing every
+# container's logs from /var/log/containers on the node and forwarding to
+# Elasticsearch. Its default output config already targets
+# "elasticsearch-master:9200" (matching the elasticsearch app's Service name)
+# so no host/port override is needed — only resource sizing.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluentd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://fluent.github.io/helm-charts
+    chart: fluentd
+    targetRevision: 0.5.3
+    helm:
+      values: |
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "300m"
+            memory: "512Mi"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

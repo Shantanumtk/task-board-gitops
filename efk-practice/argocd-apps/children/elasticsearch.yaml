@@ -1,0 +1,45 @@
+# Official Elastic Helm chart, pulled directly from helm.elastic.co — no
+# custom chart needed. Sized down to a single dev node with security/TLS
+# disabled (xpack.security.enabled: false) so it runs with no certs/passwords
+# to manage, which is fine for learning but never for real prod use.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elasticsearch
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://helm.elastic.co
+    chart: elasticsearch
+    targetRevision: 8.5.1
+    helm:
+      values: |
+        replicas: 1
+        minimumMasterNodes: 1
+        antiAffinity: "soft"
+        protocol: http
+        createCert: false
+        esJavaOpts: "-Xmx512m -Xms512m"
+        esConfig:
+          elasticsearch.yml: |
+            xpack.security.enabled: false
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "1Gi"
+          limits:
+            cpu: "1000m"
+            memory: "1.5Gi"
+        volumeClaimTemplate:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: "local-path"
+          resources:
+            requests:
+              storage: 5Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
