@@ -23,6 +23,23 @@ spec:
           limits:
             cpu: "300m"
             memory: "512Mi"
+        # Default output omits suppress_type_name, which ES 8.x rejects
+        # outright (mapping types were removed in ES 7+, and the bundled
+        # fluent-plugin-elasticsearch still sends a legacy _type field
+        # without it). Full fileConfigs override needed since Helm can't
+        # patch inside a literal config string.
+        fileConfigs:
+          04_outputs.conf: |-
+            <label @OUTPUT>
+              <match **>
+                @type elasticsearch
+                host "elasticsearch-master"
+                port 9200
+                path ""
+                suppress_type_name true
+                verify_es_version_at_startup false
+              </match>
+            </label>
   destination:
     server: https://kubernetes.default.svc
     namespace: logging
