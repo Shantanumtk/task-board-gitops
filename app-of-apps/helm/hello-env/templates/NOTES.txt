@@ -1,0 +1,5 @@
+hello-env ({{ .Values.environment }}) deployed, {{ .Values.replicaCount }} replica(s).
+
+View it:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/hello-env 8090:80
+  open http://localhost:8090

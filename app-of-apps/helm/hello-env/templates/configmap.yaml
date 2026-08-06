@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-env-html
+  labels:
+    {{- include "hello-env.labels" . | nindent 4 }}
+data:
+  index.html: |
+    <!doctype html>
+    <html>
+    <head>
+      <title>hello-env — {{ .Values.environment }}</title>
+      <style>
+        body {
+          background: {{ .Values.color }};
+          color: white;
+          font-family: system-ui, sans-serif;
+          text-align: center;
+          padding-top: 12%;
+        }
+        h1 { font-size: 4rem; text-transform: uppercase; letter-spacing: 0.1em; }
+      </style>
+    </head>
+    <body>
+      <h1>{{ .Values.environment }}</h1>
+      <p>replicas: {{ .Values.replicaCount }}</p>
+      <p>deployed via ArgoCD app-of-apps</p>
+    </body>
+    </html>

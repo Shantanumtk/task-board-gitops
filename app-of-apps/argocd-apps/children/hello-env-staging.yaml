@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-env-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Shantanumtk/task-board-gitops.git
+    targetRevision: HEAD
+    path: app-of-apps/helm/hello-env
+    helm:
+      valueFiles:
+        - values-staging.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello-env-staging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

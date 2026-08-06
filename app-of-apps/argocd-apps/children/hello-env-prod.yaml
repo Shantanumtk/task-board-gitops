@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-env-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Shantanumtk/task-board-gitops.git
+    targetRevision: HEAD
+    path: app-of-apps/helm/hello-env
+    helm:
+      valueFiles:
+        - values-prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello-env-prod
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,7 @@
+# Defaults, overridden per-environment by values-dev.yaml / values-staging.yaml / values-prod.yaml
+environment: dev
+color: "#2e7d32"
+replicaCount: 1
+resources:
+  requests: { cpu: 25m, memory: 16Mi }
+  limits: { cpu: 100m, memory: 32Mi }

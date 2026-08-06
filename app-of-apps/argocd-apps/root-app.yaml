@@ -1,0 +1,24 @@
+# The "app of apps" root. Its source is a directory of other Application
+# manifests (argocd-apps/children/*.yaml) rather than a Helm chart — syncing
+# this root creates those three child Applications, which ArgoCD then
+# reconciles independently, each deploying hello-env into its own namespace
+# with its own values file.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-env-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Shantanumtk/task-board-gitops.git
+    targetRevision: HEAD
+    path: app-of-apps/argocd-apps/children
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

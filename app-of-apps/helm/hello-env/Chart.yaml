@@ -1,0 +1,6 @@
+apiVersion: v2
+name: hello-env
+description: Minimal environment-aware app for practicing GitOps multi-environment promotion via ArgoCD app-of-apps
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

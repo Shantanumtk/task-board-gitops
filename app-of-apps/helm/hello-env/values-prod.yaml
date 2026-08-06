@@ -1,0 +1,6 @@
+environment: prod
+color: "#c62828" # red
+replicaCount: 3
+resources:
+  requests: { cpu: 100m, memory: 64Mi }
+  limits: { cpu: 300m, memory: 128Mi }

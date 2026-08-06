@@ -1,0 +1,6 @@
+environment: staging
+color: "#f9a825" # amber
+replicaCount: 2
+resources:
+  requests: { cpu: 50m, memory: 32Mi }
+  limits: { cpu: 200m, memory: 64Mi }

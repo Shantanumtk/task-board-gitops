@@ -1,0 +1,6 @@
+environment: dev
+color: "#2e7d32" # green
+replicaCount: 1
+resources:
+  requests: { cpu: 25m, memory: 16Mi }
+  limits: { cpu: 100m, memory: 32Mi }
