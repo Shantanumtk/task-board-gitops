@@ -23,11 +23,14 @@ spec:
           limits:
             cpu: "300m"
             memory: "512Mi"
-        # Default output omits suppress_type_name, which ES 8.x rejects
-        # outright (mapping types were removed in ES 7+, and the bundled
-        # fluent-plugin-elasticsearch still sends a legacy _type field
-        # without it). Full fileConfigs override needed since Helm can't
-        # patch inside a literal config string.
+        # verify_es_version_at_startup:false (the chart's own default) makes
+        # the plugin ASSUME Elasticsearch major version 5 rather than detect
+        # it, so it keeps sending a legacy _type field that ES 8.x rejects
+        # outright (mapping types were removed in ES 7+) regardless of
+        # suppress_type_name. Pinning default_elasticsearch_version to 8
+        # fixes it without depending on ES being reachable at fluentd
+        # startup. Full fileConfigs override needed since Helm can't patch
+        # inside a literal config string.
         fileConfigs:
           04_outputs.conf: |-
             <label @OUTPUT>
@@ -38,6 +41,7 @@ spec:
                 path ""
                 suppress_type_name true
                 verify_es_version_at_startup false
+                default_elasticsearch_version 8
               </match>
             </label>
   destination:
