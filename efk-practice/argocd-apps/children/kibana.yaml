@@ -15,6 +15,7 @@ spec:
     helm:
       values: |
         elasticsearchHosts: "http://elasticsearch-master:9200"
+        elasticsearchCertificateSecret: ""
         replicas: 1
         resources:
           requests:
